@@ -353,16 +353,8 @@ pre .javascript .function {
   -moz-osx-font-smoothing: grayscale;
   cursor: pointer;
 }
-.icon-linkedin:before {
-  content: "\e60d";
-  position: relative;
-  top: -2px;
-}
 .icon-twitter:before {
   content: "\e600";
-}
-.icon-weibo:before {
-  content: "\e602";
 }
 .icon-stack-overflow:before {
   content: "\e603";

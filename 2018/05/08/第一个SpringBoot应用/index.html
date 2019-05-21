@@ -34,376 +34,14 @@
 </header>
             <main class="main">
                 <section class="posts clearfix">
-    <div class="posts-wrapper">
-    
-        <article class="post article-entry">
-            <div class="post-title">
-                <a class="post-title-link text-underline" href="/2019/05/17/MySql数据类型详解/">MySQL数据类型详解</a>
-            </div>
-            <p class="sub">5月 17 2019</p>
-            <div class="post-content">
-                <ul>
-<li><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用Mysql数据库多年了，现在的mysql数据几乎也是各个互联网公司的必用的数据库之一。但是我们使用数据库时，建表的时候基本上使用的数据类型，也就是 int，varchar,timestamp这几种数据类型，其他的也没有过多的去了解。这次我们把MySql数据库的基本数据类型搞个清楚</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h1><p>先从最基本的数据类型整型说起，首先用一张表格归纳一下： </p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">数据类型</th>
-<th>字节数</th>
-<th style="text-align:center">带符号最小值</th>
-<th style="text-align:center">带符号最大值</th>
-<th>不带符号最小值</th>
-<th style="text-align:center">不带符号最大值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">TINYINT</td>
-<td>1</td>
-<td style="text-align:center">-128</td>
-<td style="text-align:center">127</td>
-<td>0</td>
-<td style="text-align:center">255</td>
-</tr>
-<tr>
-<td style="text-align:center">SMALLINT</td>
-<td>2</td>
-<td style="text-align:center">-32768</td>
-<td style="text-align:center">32767</td>
-<td>0</td>
-<td style="text-align:center">65535</td>
-</tr>
-<tr>
-<td style="text-align:center">MEDIUMINT</td>
-<td>3</td>
-<td style="text-align:center">-8388608</td>
-<td style="text-align:center">8388607</td>
-<td>0</td>
-<td style="text-align:center">16777215</td>
-</tr>
-<tr>
-<td style="text-align:center">INT</td>
-<td>4</td>
-<td style="text-align:center">-2147483648</td>
-<td style="text-align:center">2147483647</td>
-<td>0</td>
-<td style="text-align:center">4294967295</td>
-</tr>
-<tr>
-<td style="text-align:center">BIGINT</td>
-<td>8</td>
-<td style="text-align:center">-9223372036854775808</td>
-<td style="text-align:center">9223372036854775807</td>
-<td>0</td>
-<td style="text-align:center">18446744073709551616</td>
-</tr>
-</tbody>
-</table>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们实际开发中，整型都喜欢用int(11) 这样表示，从上面的表中可以知道，int类型占了4个字节，其实有些情况下我们并不需要用到这么长的数据类型表示，比如表示、年龄、性别等等能够枚举出来的值，我们可以选择较小的数据类型，这样可以节约空间。</p>
-<p><br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可能有人会说了，这才节约一个或者几个字节的空间，能有什么用。但是别忘了，MySql本质上是一个存储系统，如果你的习惯不好，一个字段浪费了几个字节，一张表又有很多个字段，然后一个数据库又有好多张表，假设没一张表存100W条数据，这么算下来的话，浪费的空间可不是用几个字节就能表示的呢。既然MySql给我们提供了这么多的数据类型，那么肯定是各有用途的。不然要给BIGINT基本全都能搞定了。MySql不像Java程序里面一样，使用byte类型的地方也可以使用long类型，因为绝大分的对象在程序中的短命的。执行完了就被释放了。所以可以没有那么节约(但是还是要注意) ，MySql设定的字段类型保存的数据是永久的，如果浪费了那就是永久浪费了。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MySql中的数据类型，默认是带符号的，举例说明一下</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 <span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> test_tinyint;</span><br><span class="line">2 <span class="keyword">create</span> <span class="keyword">table</span> test_tinyint (</span><br><span class="line"><span class="number">3</span>     <span class="keyword">num</span> <span class="built_in">tinyint</span></span><br><span class="line"><span class="number">4</span> ) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">charset</span>=utf8;</span><br><span class="line">5 </span><br><span class="line">6 <span class="keyword">insert</span> <span class="keyword">into</span> test_tinyint <span class="keyword">values</span>(<span class="number">-100</span>);</span><br><span class="line">7 <span class="keyword">insert</span> <span class="keyword">into</span> test_tinyint <span class="keyword">values</span>(<span class="number">128</span>);</span><br></pre></td></tr></table></figure>
-<p>执行如上sql语句，第7行会报如下的错误</p>
-<blockquote>
-<p>insert into test_tinyint values(128)</p>
-<p>1264 - Out of range value for column ‘num’ at row 1”</p>
-</blockquote>
-<p>从这里可以看出，MySql中整型默认是带符号的。 如果建表的时候 把上面第3行 改为 “num tinyint unsigned”</p>
-<p>再执行6，7行的插入语句就会出现如下错误：</p>
-<blockquote>
-<p>insert into test_tinyint values(-100)</p>
-<p>1264 - Out of range value for column ‘num’ at row 1</p>
-</blockquote>
-<p>因为无符号的整数是无法表示负数的。</p>
-<p><br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在开发中我们经常会写int(11) 那这个11到底有什么用了，首先我们要知道 “整型(N)” 这种写法并不是占了11位，如果数据类型定下来了，后面的N无论多少，所占的字节数都不会变。这个N表示的是显示的宽度，不足的用0补足，超过的无视长度直接显示整个数字，但是这要设置了 <strong>unsigned zerofill</strong> 才有效</p>
-<p><br></p>
-<hr>
-<h1 id="浮点型"><a href="#浮点型" class="headerlink" title="浮点型"></a>浮点型</h1><p>MySql中的浮点型有两种，分别为float,double</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center"><strong>数据类型</strong></th>
-<th style="text-align:center"><strong>字节数</strong></th>
-<th style="text-align:center"><strong>备注</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">float</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">单精度浮点型</td>
-</tr>
-<tr>
-<td style="text-align:center">double</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">双精度浮点型</td>
-</tr>
-</tbody>
-</table>
-<p>float(M,D),double(M,D)的用法规则如下：</p>
-<ul>
-<li>D表示浮点型数据小数点之后的精度，假如超过D位则四舍五入</li>
-<li>M表示浮点型数据总共的位数</li>
-</ul>
-<p>举例证明，执行如下语句</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> test_float;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> test_float (</span><br><span class="line">    <span class="keyword">num</span> <span class="built_in">float</span>(<span class="number">5</span>, <span class="number">2</span>)</span><br><span class="line">) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">charset</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">1.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">1.237</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">10.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">100.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">1000.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">10000.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">100000.233</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> test_float;</span><br></pre></td></tr></table></figure>
-<p>得到的结果为：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-------</span></span><br><span class="line">num</span><br><span class="line"><span class="comment">------</span></span><br><span class="line">1.23</span><br><span class="line">1.24</span><br><span class="line">10.23</span><br><span class="line">100.23</span><br><span class="line"><span class="comment">-------</span></span><br></pre></td></tr></table></figure>
-<p><br></p>
-<hr>
-<h1 id="定点型-decimal"><a href="#定点型-decimal" class="headerlink" title="定点型(decimal)"></a>定点型(decimal)</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从上面的浮点型我们可以看到有丢失精度的问题，那么定点型的数据类型就能解决这个问题了,decimal一般常见于银行，互联网金融系统对小数点后的数字比较敏感的系统中。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;decimal和float/double的区别：</p>
-<ul>
-<li>float，double中存储的是近似值，而decimal则是以字符串的形式保存的</li>
-<li>decimal(M,D)的规则和float/double相同，但区别在float/double在不指定M、D时默认按照实际精度来处理而decimal在不指定M、D时默认为decimal(10, 0)</li>
-</ul>
-<p><br></p>
-<hr>
-<h1 id="日期类型"><a href="#日期类型" class="headerlink" title="日期类型"></a>日期类型</h1><p>Mysql中有5种形式的日期类型：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">数据类型</th>
-<th style="text-align:center">字节数</th>
-<th style="text-align:center">格式</th>
-<th style="text-align:center">备注</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">date</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">yyyy-MM-dd</td>
-<td style="text-align:center">存储日期值</td>
-</tr>
-<tr>
-<td style="text-align:center">time</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">HH:mm:ss</td>
-<td style="text-align:center">存储时分秒</td>
-</tr>
-<tr>
-<td style="text-align:center">year</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">yyyy</td>
-<td style="text-align:center">存储年</td>
-</tr>
-<tr>
-<td style="text-align:center">datetime</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">yyyy-MM-dd HH:mm:ss</td>
-<td style="text-align:center">存储日期+时间</td>
-</tr>
-<tr>
-<td style="text-align:center">timestamp</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">yyyy-MM-dd HH:mm:ss</td>
-<td style="text-align:center">存储日期+时间，可作时间戳</td>
-</tr>
-</tbody>
-</table>
-<p>这里重点注意一下 datetime和timestamp的区别，这两个类型感觉都差不多，但是占用的字节数却相差较大，这两个数据类型的区别如下：</p>
-<ul>
-<li><p>timestamp所能存储的时间范围为：’1970-01-01 00:00:01.000000’ 到 ‘2038-01-19 03:14:07.999999’。</p>
-</li>
-<li><p>datetime所能存储的时间范围为：’1000-01-01 00:00:00.000000’ 到 ‘9999-12-31 23:59:59.999999’。</p>
-</li>
-<li><p>datetime默认值为空，当插入null时，该值就是null；timestamp默认值不为空，当插入的值为null的时候，mysql会取当前时间</p>
-</li>
-<li><p>datetime存储的时间与时区无关，timestamp存储的时间及显示的时间都依赖于当前时区</p>
-<p>在实际工作种我们一般都会设这么两个字段</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create_time timestamp default current_timestamp <span class="keyword">comment</span> <span class="string">"创建时间"</span>,</span><br><span class="line">update_time <span class="built_in">timestamp</span> <span class="keyword">default</span> <span class="keyword">current_timestamp</span> <span class="keyword">on</span> <span class="keyword">update</span> <span class="keyword">current_timestamp</span> <span class="keyword">comment</span> <span class="string">"修改时间"</span>,</span><br></pre></td></tr></table></figure>
-<p><br></p>
-</li>
-</ul>
-<hr>
-<h1 id="CHAR和VARCHAR类型"><a href="#CHAR和VARCHAR类型" class="headerlink" title="CHAR和VARCHAR类型"></a>CHAR和VARCHAR类型</h1><p>​    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在数据库中，最常用的数据类型就是字符型了，而字符型就是这两个了，关于这两个的差别如下：</p>
-<ul>
-<li>har是固定长度字符串，其长度范围为0~255且与编码方式无关，无论字符实际长度是多少，都会按照指定长度存储，不够的用空格补足；varchar为可变长度字符串，在utf8编码的数据库中其长度范围为0~21844</li>
-<li>char实际占用的字节数即存储的字符所占用的字节数，varchar实际占用的字节数为存储的字符+1或+2或+3</li>
-<li>MySQL处理char类型数据时会将结尾的所有空格处理掉而varchar类型数据则不会</li>
-</ul>
-<p><br></p>
-<h2 id="VARCHAR类型数据占用空间大小探究"><a href="#VARCHAR类型数据占用空间大小探究" class="headerlink" title="VARCHAR类型数据占用空间大小探究"></a>VARCHAR类型数据占用空间大小探究</h2><p>首先执行一段语句测试一下：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> test_varchar;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> test_varchar (</span><br><span class="line">    varchar_value <span class="built_in">varchar</span>(<span class="number">100000</span>)</span><br><span class="line">) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">charset</span>=utf8;</span><br></pre></td></tr></table></figure>
-<p>执行出现了如下报错：</p>
-<p><code>Column length too big for column &#39;varchar_value&#39; (max = **21845**); use BLOB or TEXT instead</code></p>
-<p>我把大小改为21845之后，执行依然报错：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Row size too large. The maximum row size for the used table type, not counting BLOBs, is 65535. This includes storage overhead, <span class="keyword">check</span> the manual. You have <span class="keyword">to</span> <span class="keyword">change</span> <span class="keyword">some</span> <span class="keyword">columns</span> <span class="keyword">to</span> <span class="built_in">TEXT</span> <span class="keyword">or</span> BLOBs</span><br></pre></td></tr></table></figure>
-<p>然后改为21844,再次执行就没有报错了，所以在utf编码的格式下varchar(M) M最大值为21844，那么换成gbk编码呢</p>
-<p>还是报同样的错</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Column length too big for column 'varchar_value' (max = 32767); <span class="keyword">use</span> <span class="built_in">BLOB</span> <span class="keyword">or</span> <span class="built_in">TEXT</span> instead</span><br></pre></td></tr></table></figure>
-<p>把大小改为32767还是报和utf8编码一样的错误，把大小改为32765就好了</p>
-<p>那么为社么会出现这种情况呢？原因如下：</p>
-<ul>
-<li>MySQL要求一个行的定义长不能超过65535即64K</li>
-<li>如果varchar字段未指定 not null，那么就会有一个字节专门表示该字段是否为null</li>
-<li>varchar(M)，当M范围为0&lt;=M&lt;=255时会专门有一个字节记录varchar型字符串长度，当M&gt;255时会专门有两个字节记录varchar型字符串的长度，把这一点和上一点结合，那么65535个字节实际可用的为65535-3=65532个字节</li>
-<li>所有英文无论其编码方式，都占用1个字节，但对于gbk编码，一个汉字占两个字节，因此最大M=65532/2=32766；对于utf8编码，一个汉字占3个字节，因此最大M=65532/3=21844</li>
-<li>对于utfmb4编码方式，1个字符最大可能占4个字节，那么varchar(M)，M最大为65532/4=16383</li>
-</ul>
-<p><strong>上面的这种情况是表中只有varchar型的数据，如果同时存在其他类型的数据，那么需要把这些数据减去，才能计算出M的最大值是多少</strong></p>
-<p><br></p>
-<hr>
-<h1 id="VARCHAR、TEXT、BLOB的比较"><a href="#VARCHAR、TEXT、BLOB的比较" class="headerlink" title="VARCHAR、TEXT、BLOB的比较"></a>VARCHAR、TEXT、BLOB的比较</h1><p>因为MySQL单行最大的数据量为64K。所以就需要更大的数据类型来存储。这时候text和blob 就可以上场了。</p>
-<p>当varchar(M)的M大于某些数值时，varchar会自动转为text。情况如下：</p>
-<ul>
-<li>M&gt;255时就会转为tinytext</li>
-<li>M&gt;500时转为text</li>
-<li>M&gt;20000时转为mediumtext</li>
-</ul>
-<p><strong>过大的内容varchar和text没有区别，同时varchar(M)和text的区别在于：</strong></p>
-<ul>
-<li>单行64K即65535字节的空间，varchar只能用63352/65533个字节，但是text可以65535个字节全部用起来</li>
-<li>text可以指定text(M)，但是M无论等于多少都没有影响</li>
-<li>text不允许有默认值，varchar允许有默认值</li>
-</ul>
-<p>varchar和text两种数据类型，使用建议是<strong>能用varchar就用varchar而不用text（存储效率高）</strong>，varchar(M)的M有长度限制，之前说过，如果大于限制，可以使用mediumtext（16M）或者longtext（4G）。</p>
-<p> 至于text和blob，简单过一下就是<strong>text存储的是字符串而blob存储的是二进制字符串</strong>，简单说blob是用于存储例如图片、音视频这种文件的二进制数据的。</p>
-
-            </div>
-        </article>
-    
-        <article class="post article-entry">
-            <div class="post-title">
-                <a class="post-title-link text-underline" href="/2019/05/16/计算机组成原理-入门篇/">计算机组成原理_入门篇</a>
-            </div>
-            <p class="sub">5月 16 2019</p>
-            <div class="post-content">
-                <h1 id="1、冯·诺依曼体系结构"><a href="#1、冯·诺依曼体系结构" class="headerlink" title="1、冯·诺依曼体系结构"></a>1、冯·诺依曼体系结构</h1><h2 id="计算机的基本硬件组成"><a href="#计算机的基本硬件组成" class="headerlink" title="计算机的基本硬件组成"></a>计算机的基本硬件组成</h2><blockquote>
-<p>计算机最基本的三大件就是，CPU、内存、主板</p>
-</blockquote>
-<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在计算机的三大件中，CPU是最核心的配件，全名叫做中央处理器(Central Processing Unit)。为什么说CPU是“最重要”的呢，因为计算机所有的计算都是由CPU来计算。所以CPU也成了计算机中造价最贵的部分之一</p>
-<p><img src="/images/cpu.jpg" alt="cpu图片"></p>
-<h3 id="内存-Memory"><a href="#内存-Memory" class="headerlink" title="内存(Memory)"></a>内存(Memory)</h3><p>​        第二个重要的配件就是内存，你在计算机中所有运行的程序，比如打开浏览器，运行游戏，都要加载到内存中才能运行。程序读取的数据，计算得到的结果也要反倒内存里，内存越大，加载的东西就越多。这也是我们平时买电脑时喜欢买大内存的，因为可以同时跑很多的程序。</p>
-<p><img src="/images/内存条.jpg" alt="内存条"></p>
-<h3 id="主板"><a href="#主板" class="headerlink" title="主板"></a>主板</h3><p>​        主板其实就是一个有着各种各样的插槽的配件。存放在内存里的程序和数据需要CPU读取，CPU计算完之后需要把数据写回内存，然后CPU没有直接插在内存上，所以就需要一个沟通桥梁，这个桥梁就是主板。</p>
-<p><br></p>
-<p>我们的CPU和内存条都需要插在主板上，主板的芯片组(Chipset) 和总线(Bus)解决了CPU和内存之间如何通信的问题。芯片组控制了数据传输的流转也就是数据从哪来到哪去的问题。而总线就是数据传输的高速公路，所以总线速度决定了数据传输的有多快</p>
-<p><img src="/images/主板.jpg" alt="主板"></p>
-<hr>
-<p>=================================================================================</p>
-<hr>
-<blockquote>
-<p>​        计算机只要有了这三大件，然后在配上电源，差不多就可以跑起来了。但是这个东西我们人类现在还没法使用它，因为它还缺少输入/输出设备 也就是I/O设备。这样我们才让计算帮助我们干活并且得到反馈。像我们个人电脑必须得有个显示器，因为只有它我们才能看到各种图像，文字。显示器这种设备也就是输出设备。像鼠标，键盘这些配件就是输入设备。最后再给电脑配置一个硬盘，这样各种数据才能持久的保存下来。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>​        现在电脑上基本上都会配备一个风扇用于解决灰尘和散热问题，不过这不是计算机必备的硬件。除此之外，计算机还有个特殊的设备，这个设备就是显卡(Graphice Card)。现在的图形界面操作系统的计算机，显卡都是必不可少的。可能有人也会有疑问，我买的电脑的时没有显卡也可以看见各种图形啊，那是因为现在的主板都带了内置的显卡。如果想要玩大型的游戏，你可能还需要单独的显卡(简称独显)插在主板上，显卡之所以特殊，是因为显卡里面除了cpu之外还有另外一个“处理器” ，也就是GPU(Graphics Processing Unit，图形处理器)。GPU同样可以做各种计算工作</p>
-</blockquote>
-<p>​        鼠标、键盘这些外部I/O设备，它们是通过主板上的<strong>南桥</strong>芯片组来控制和CPU通信的。</p>
-<hr>
-
-            </div>
-        </article>
-    
-        <article class="post article-entry">
-            <div class="post-title">
-                <a class="post-title-link text-underline" href="/2019/05/16/深入理解volatile/">深入理解volatile</a>
-            </div>
-            <p class="sub">5月 16 2019</p>
-            <div class="post-content">
-                <blockquote>
-<p> 前沿:volatile是Java虚拟机提供的轻量级同步机制</p>
-</blockquote>
-<p>volatile的3大特性：</p>
-<ul>
-<li><p>保证可见性</p>
-</li>
-<li><p>不保证原子性</p>
-</li>
-<li><p>禁止指令重排序</p>
-</li>
-</ul>
-<h1 id="细说JMM"><a href="#细说JMM" class="headerlink" title="细说JMM"></a>细说JMM</h1><p>JMM ：Java内存模型Java Memory Model，简称JMM，它本身是一种抽象该概念，并不真实存在，它描述的是一组规则或者规范，通过这组规范定义了程序各个变量（包括实例字段）</p>
-<p>JMM关于同步的规定：</p>
-<ol>
-<li>线程解锁前，必须把共享变量的值刷新回主内存</li>
-<li>线程加锁前，必须读取主内存的最新值到自己的工作内存</li>
-<li>加锁解锁是同一把锁</li>
-</ol>
-<hr>
-<p>由于JVM运行程序的实体是线程，而每个线程创建时JVM都会为其创建一个工作内存，工作内存是每个线程的私有数据区域，而Java内存模型中规定所有的变量都存储在主内存中，主内存是共享内存区域，所有线程都可以访问，但线程对变量的操作(读取赋值等)必须在工作内存中进行，首先要将变量从主内存中拷贝到自己的工作内存空间(注意这里不是整个对象的拷贝，如果一个对象有几十M，每个线程都拷贝，那内存早就爆了，这里的拷贝就是是线程中用到对象的字段罢了)，然后对变量进行操作，操作完成之后再将变量刷回主内存，不能直接操作主内存中的变量，各个线程中的工作内存中存储着主内存中的变量拷贝副本，因此不同的线程间无法访问对方的工作内存，线程间的通信必须依靠主内存来完成，简要访问的过程如下图:</p>
-<p><img src="/images/java内存模型.png" alt="图片"></p>
-
-            </div>
-        </article>
-    
-        <article class="post article-entry">
-            <div class="post-title">
-                <a class="post-title-link text-underline" href="/2019/05/10/SpringBoot自动配置探秘/">SpringBoot自动配置探秘</a>
-            </div>
-            <p class="sub">5月 10 2019</p>
-            <div class="post-content">
-                <blockquote>
-<p>SpringBoot应用程序最核心的功能就是简化了配置，实现了开箱即用的功能，其中能实现这些功能背后推动者就是@SpringBootApplication 这个注解。接下来我们就来探秘这个注解</p>
-</blockquote>
-<h1 id="SpringBootApplication-背后的秘密"><a href="#SpringBootApplication-背后的秘密" class="headerlink" title="@SpringBootApplication 背后的秘密"></a>@SpringBootApplication 背后的秘密</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这是启动Spring的方法</span></span><br><span class="line">        SpringApplication.run(SpringBootDemo.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>SpringBoot应用启动的方法只需要在如下类上加上@SpringBootApplication就可以启动整个应用，那么这个注解到底有何神奇的地方呢？</p>
-<p>首先来看一下这个注解到底长什么样子，如下:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@SpringBootConfiguration</span></span><br><span class="line"><span class="meta">@EnableAutoConfiguration</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(excludeFilters = &#123;</span><br><span class="line">		<span class="meta">@Filter</span>(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),</span><br><span class="line">		<span class="meta">@Filter</span>(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootApplication &#123;</span><br></pre></td></tr></table></figure>
-<p>​    从源码上看出，这个@SpringBootApplication是一个复合注解，主要是由一下三个注解组成</p>
-<ul>
-<li>@SpringBootConfiguratiion</li>
-<li>@EnableAutoConfiguration</li>
-<li>@ComponentScan</li>
-</ul>
-<p>如果不用@SpringBootApplication，我们也可以用这三个注解放到启动类上也是同样的效果</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootConfiguration</span></span><br><span class="line"><span class="meta">@EnableAutoConfiguration</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这是启动Spring的方法</span></span><br><span class="line">        SpringApplication.run(SpringBootDemo.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>接下来，我们来一层层撕开这几个注解的神秘面纱</p>
-<hr>
-<h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootConfiguration &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>​    我们可以看到这个注解其实就是一个配置类的注解 @Configuration,被这个注解标记的都是一个配置类，相当于之前的一个beans.xml的配置文件，这是Spring4.0就已经有的，没有什么新鲜的</p>
-<hr>
-<h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@AutoConfigurationPackage</span></span><br><span class="line"><span class="meta">@Import</span>(AutoConfigurationImportSelector.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</span><br></pre></td></tr></table></figure>
-<p>​    这个注解是开启自动配置功能，可以帮助SpringBoot应用将所有符合条件的配置类(@Configuration)导入到IOC容器中。主要的实现原理是通过 @Import 给容器中导入一些组件 </p>
-<p>我们来看看导入的这个 AutoConfigurationImportSelector 有什么作用</p>
-<p><img src="/images/继承关系图.png" alt="图片"></p>
-<p>​    从继承关系图中，我们可以看到AutoConfigurationImportSelector实现了ImportSelector(导入选择器)接口的，这个接口的作用就是返回需要导入到容器中的全类名数组</p>
-<p>我们来看看源码，具体做了什么事</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String[] selectImports(AnnotationMetadata annotationMetadata) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!isEnabled(annotationMetadata)) &#123;</span><br><span class="line">			<span class="keyword">return</span> NO_IMPORTS;</span><br><span class="line">		&#125;</span><br><span class="line">		AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader</span><br><span class="line">				.loadMetadata(<span class="keyword">this</span>.beanClassLoader);</span><br><span class="line">		AnnotationAttributes attributes = getAttributes(annotationMetadata);</span><br><span class="line">      	<span class="comment">// 关键行，获取所有可用的配置类</span></span><br><span class="line">		List&lt;String&gt; configurations = getCandidateConfigurations(annotationMetadata,</span><br><span class="line">				attributes);</span><br><span class="line">		configurations = removeDuplicates(configurations);</span><br><span class="line">		Set&lt;String&gt; exclusions = getExclusions(annotationMetadata, attributes);</span><br><span class="line">		checkExcludedClasses(configurations, exclusions);</span><br><span class="line">		configurations.removeAll(exclusions);</span><br><span class="line">		configurations = filter(configurations, autoConfigurationMetadata);</span><br><span class="line">		fireAutoConfigurationImportEvents(configurations, exclusions);</span><br><span class="line">		<span class="keyword">return</span> StringUtils.toStringArray(configurations);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>我们再进去看看，他是如何获取所有可用的配置类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> List&lt;String&gt; <span class="title">getCandidateConfigurations</span><span class="params">(AnnotationMetadata metadata,</span></span></span><br><span class="line"><span class="function"><span class="params">			AnnotationAttributes attributes)</span> </span>&#123;</span><br><span class="line">  		<span class="comment">// 通过 SpringFactoriesLoader 的loadFactoryNames 方法获取配置类的</span></span><br><span class="line">		List&lt;String&gt; configurations = SpringFactoriesLoader.loadFactoryNames(</span><br><span class="line">				getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader());</span><br><span class="line">		Assert.notEmpty(configurations,</span><br><span class="line">				<span class="string">"No auto configuration classes found in META-INF/spring.factories. If you "</span></span><br><span class="line">						+ <span class="string">"are using a custom packaging, make sure that file is correct."</span>);</span><br><span class="line">		<span class="keyword">return</span> configurations;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>再看看loadFactoryNames方法如何获取的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The location to look for factories.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;Can be present in multiple JAR files.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FACTORIES_RESOURCE_LOCATION = <span class="string">"META-INF/spring.factories"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">loadFactoryNames</span><span class="params">(Class&lt;?&gt; factoryClass, @Nullable ClassLoader classLoader)</span> </span>&#123;</span><br><span class="line">		String factoryClassName = factoryClass.getName();</span><br><span class="line">		<span class="keyword">return</span> loadSpringFactories(classLoader).getOrDefault(factoryClassName, Collections.emptyList());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; loadSpringFactories(<span class="meta">@Nullable</span> ClassLoader classLoader) &#123;</span><br><span class="line">		MultiValueMap&lt;String, String&gt; result = cache.get(classLoader);</span><br><span class="line">		<span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> result;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">          	<span class="comment">// 获取资源路径 从FACTORIES_RESOURCE_LOCATION 路径中获取</span></span><br><span class="line">			Enumeration&lt;URL&gt; urls = (classLoader != <span class="keyword">null</span> ?</span><br><span class="line">					classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :</span><br><span class="line">					ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));</span><br><span class="line">			result = <span class="keyword">new</span> LinkedMultiValueMap&lt;&gt;();</span><br><span class="line">			<span class="keyword">while</span> (urls.hasMoreElements()) &#123;</span><br><span class="line">				URL url = urls.nextElement();</span><br><span class="line">				UrlResource resource = <span class="keyword">new</span> UrlResource(url);</span><br><span class="line">				Properties properties = PropertiesLoaderUtils.loadProperties(resource);</span><br><span class="line">				<span class="keyword">for</span> (Map.Entry&lt;?, ?&gt; entry : properties.entrySet()) &#123;</span><br><span class="line">					List&lt;String&gt; factoryClassNames = Arrays.asList(</span><br><span class="line">							StringUtils.commaDelimitedListToStringArray((String) entry.getValue()));</span><br><span class="line">					result.addAll((String) entry.getKey(), factoryClassNames);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			cache.put(classLoader, result);</span><br><span class="line">			<span class="keyword">return</span> result;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Unable to load factories from location ["</span> +</span><br><span class="line">					FACTORIES_RESOURCE_LOCATION + <span class="string">"]"</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>从源码中我们可以看出，类加载器是扫描了所有的classpath下的 META-INF/spring.factories 文件 获取配置类的全限定类名的</p>
-<p>spring.factories文件里其实就是一个个键值对，就是长成如下这个样子</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># Auto Configure</span><br><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</span><br><span class="line">org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.aop.AopAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.cloud.CloudAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.couchbase.CouchbaseAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.dao.PersistenceExceptionTranslationAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.cassandra.CassandraReactiveDataAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.cassandra.CassandraReactiveRepositoriesAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.cassandra.CassandraRepositoriesAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.couchbase.CouchbaseDataAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.couchbase.CouchbaseReactiveDataAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.couchbase.CouchbaseReactiveRepositoriesAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.couchbase.CouchbaseRepositoriesAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration,\</span><br><span class="line">org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration,\</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="AutoConfigurationPackage"><a href="#AutoConfigurationPackage" class="headerlink" title="@AutoConfigurationPackage"></a>@AutoConfigurationPackage</h3><p>​    看一看这个注解的结构：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@Import</span>(AutoConfigurationPackages.Registrar.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AutoConfigurationPackage &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>也是同样导入了一个组件Registrar</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Registrar</span> <span class="keyword">implements</span> <span class="title">ImportBeanDefinitionRegistrar</span>, <span class="title">DeterminableImports</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">  		<span class="comment">//将主配置类(@SpringBootApplication)所在包以及下面所有子包里面的所有组件都扫描到ioc容器中</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBeanDefinitions</span><span class="params">(AnnotationMetadata metadata,</span></span></span><br><span class="line"><span class="function"><span class="params">				BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">			register(registry, <span class="keyword">new</span> PackageImport(metadata).getPackageName());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> Set&lt;Object&gt; <span class="title">determineImports</span><span class="params">(AnnotationMetadata metadata)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">return</span> Collections.singleton(<span class="keyword">new</span> PackageImport(metadata));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p><em>总结</em>：</p>
-<p>​    @EnableAutoConfiguration就是可以把主配置类所在的包及子包下所有的组件扫描进来，并且从classPath下扫描所有的META/spring.factories配置文件，并将文件中的对应的配置类加入到容器中</p>
-<hr>
-<h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2><p>@ComponentScan 对应于XML配置形式中的 <a href="context:component-scan" target="_blank" rel="noopener">context:component-scan</a>，用于将一些标注了特定注解的bean定义批量采集注册到Spring的IoC容器之中，这些特定的注解大致包括：</p>
-<ul>
-<li>@Controller</li>
-<li>@Entity</li>
-<li>@Component </li>
-<li>@Service</li>
-<li>@Repository</li>
-</ul>
-<p>对于该注解还可以通过basePackages属性来更细粒度的控制该注解的自动扫描范围，比如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(basePackages = &#123;<span class="string">"cn.xxh.controller"</span>,<span class="string">"cn.xxh.entity"</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-            </div>
-        </article>
-    
-        <article class="post article-entry">
-            <div class="post-title">
-                <a class="post-title-link text-underline" href="/2018/05/08/第一个SpringBoot应用/">第一个SpringBoot应用</a>
-            </div>
-            <p class="sub">5月 08 2018</p>
-            <div class="post-content">
-                <h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><ul>
+<div class="post-wrapper">
+    <article class="post article-entry">
+    <div class="post-title">
+        第一个SpringBoot应用
+    </div>
+    <p class="sub">5月 08 2018</p>
+    <div class="post-content">
+        <h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><ul>
 <li>jdk1.8</li>
 <li>maven3.x</li>
 <li>IntelliJIDEA2018</li>
@@ -447,71 +85,49 @@
 <p>​    springboot将所有的功能场景都抽取出来，做成一个个starters,只需要在项目中引入这些starter相关的场景的所有依赖都会导入进来。需要用到什么功能就导入什么样的场景启动器</p>
 <p>更多的场景启动器见 <a href="https://docs.spring.io/spring-boot/docs/2.0.3.RELEASE/reference/htmlsingle/#using-boot-starter" target="_blank" rel="noopener">springboot官方提供的场景启动器</a></p>
 
-            </div>
-        </article>
-    
-        <article class="post article-entry">
-            <div class="post-title">
-                <a class="post-title-link text-underline" href="/2018/05/06/SpringBoot-简介/">SpringBoot 简介</a>
-            </div>
-            <p class="sub">5月 06 2018</p>
-            <div class="post-content">
-                <h4 id="SpringBoot介绍"><a href="#SpringBoot介绍" class="headerlink" title="SpringBoot介绍"></a>SpringBoot介绍</h4><p>SpringBoot是在2014年的时候伴随着Spring4.0出的一个框架，具体可以参考<a href="[https://spring.io](https://spring.io/">Spring官网</a>) </p>
-<h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>SpringBoot用来简化Spring应用开发的一个框架，采取约定大于配置，去繁从简，just run就能创建一个独立的，产品级别的应用</p>
-<h5 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h5><p>J2EE笨重的开发，繁多的配置，低下的开发效率，复杂的部署流程，第三方技术集成难度较大</p>
-<h5 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h5><ul>
-<li>Spring全家桶时代</li>
-<li>SpringBoot 到 J2EE一站式解决方案</li>
-<li>SpringCloud 到 分布式整体解决方案</li>
-</ul>
-<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><ul>
-<li>快速创建独立运行的Spring项目以及与主流框架集成</li>
-<li>使用嵌入式的Servlet容器(默认是tomcat)，应用无需打成war包</li>
-<li>starters自动依赖与版本控制</li>
-<li>大量的自动配置，简化开发，也可以修改默认值</li>
-<li>无需配置xml,无代码生成，开箱即用</li>
-<li>准生产环境下的运行时应用监控</li>
-<li>与云计算的天然集成</li>
-</ul>
-<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><ul>
-<li>依赖太多，一个简单的SpringBoot应用都有好几十M大小</li>
-<li>缺少监控集成方案，安全管理方案，只提供了基础监控，要实现生产级别的监控需要自己手动解决</li>
-</ul>
-<h4 id="微服务介绍"><a href="#微服务介绍" class="headerlink" title="微服务介绍"></a>微服务介绍</h4><p>微服务最先由MartinFlowler在自己的博客上提出来的 <a href="https://martinfowler.com/microservices/" target="_blank" rel="noopener">微服务</a></p>
-<p>微服务是一种架构风格</p>
-<p>微服务软件架构提倡一个应用应该是一组小型服务；可以通过HTTP的方式进行互通</p>
-<p>微服务每一个功能元素最终都是一个独立替换和独立升级的软件单元</p>
-<p>微服务简单示意图如下：</p>
-<p><img src="/images/微服务.png" alt="图片"></p>
-
-            </div>
-        </article>
-    
-</div>
-<div class="side-bar">
-
-
-    <div class="avator" id="avator">
-    <div class="title">
-        <a href="#" class="text-underline">关于我</a>
     </div>
-        <img src="avator.jpg" class="ava-img">
-        <h3 class="author">xuxionghui</h3>
-        <div class="icon-list">
-        <a href><i class="iconfont icon-weibo icon-item"></i></a>
-        <a href="mailto:xuxionghui92@163.com"><i class="iconfont icon-email icon-item"></i></a>
-        <a href="https://www.github.com/xuhuizi"><i class="iconfont icon-github icon-item"></i></a>
-        <a href><i class="iconfont icon-linkedin icon-item"></i></a>
+    </article>
+</div>
+
+    <div class="_toc">
+        <strong class="toc-title">
+        Contents
+        </strong>
+        <div class="toc-content">
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#环境准备"><span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建项目"><span class="toc-text">创建项目</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#第一种方式"><span class="toc-text">第一种方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第二种方式"><span class="toc-text">第二种方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#POM文件探究"><span class="toc-text">POM文件探究</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-父项目"><span class="toc-text">1.父项目</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-导入的依赖"><span class="toc-text">2.导入的依赖</span></a></li></ol></li></ol></li></ol>
         </div>
-    <div class="tags">
-    <h3 class="tags-title">标签</h3>
-    <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，MySQL/">数据库，MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/">SpringBoot</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机组成原理/">计算机组成原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高并发/">高并发</a><span class="tag-list-count">1</span></li></ul>
-</div>
     </div>
-</div>
 
 </section>
 
+
+    <nav class="post-nav">
+        
+            <div class="page-tags">
+                
+                    <a href="/tags/SpringBoot/">SpringBoot</a>
+                
+            </div>
+        
+    </nav>
+
+
+
+    <nav class="paginator">
+        
+            <a class="prev" href="/2019/05/10/SpringBoot自动配置探秘/">
+                <i class="iconfont icon-left"></i>
+                <span class="prev-text">SpringBoot自动配置探秘</span>
+            </a>
+        
+        
+            <a class="next" href="/2018/05/06/SpringBoot-简介/">
+                
+                <span class="prev-text">SpringBoot 简介</span>
+                <i class="iconfont icon-right"></i>
+            </a>
+        
+    </nav>
 
 
             </main>

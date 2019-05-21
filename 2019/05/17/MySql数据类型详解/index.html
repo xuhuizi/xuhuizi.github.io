@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+    <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="/styles/main.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+<div class="main">
+<div class="title">
+    <a href="#" class="logo">小灰的技术</a>
+</div>
+<div class="site-nav">
+    <ul id="menu" class="menu">
+    
+        <li class="menu-item text-underline">
+            <a href="/">主页</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/archives">归档</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/about">关于</a>
+        </li>
+            
+    </ul>
+</div>
+</div>
+</header>
+            <main class="main">
+                <section class="posts clearfix">
+<div class="post-wrapper">
+    <article class="post article-entry">
+    <div class="post-title">
+        MySQL数据类型详解
+    </div>
+    <p class="sub">5月 17 2019</p>
+    <div class="post-content">
+        <ul>
+<li><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用Mysql数据库多年了，现在的mysql数据几乎也是各个互联网公司的必用的数据库之一。但是我们使用数据库时，建表的时候基本上使用的数据类型，也就是 int，varchar,timestamp这几种数据类型，其他的也没有过多的去了解。这次我们把MySql数据库的基本数据类型搞个清楚</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h1><p>先从最基本的数据类型整型说起，首先用一张表格归纳一下： </p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">数据类型</th>
+<th>字节数</th>
+<th style="text-align:center">带符号最小值</th>
+<th style="text-align:center">带符号最大值</th>
+<th>不带符号最小值</th>
+<th style="text-align:center">不带符号最大值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">TINYINT</td>
+<td>1</td>
+<td style="text-align:center">-128</td>
+<td style="text-align:center">127</td>
+<td>0</td>
+<td style="text-align:center">255</td>
+</tr>
+<tr>
+<td style="text-align:center">SMALLINT</td>
+<td>2</td>
+<td style="text-align:center">-32768</td>
+<td style="text-align:center">32767</td>
+<td>0</td>
+<td style="text-align:center">65535</td>
+</tr>
+<tr>
+<td style="text-align:center">MEDIUMINT</td>
+<td>3</td>
+<td style="text-align:center">-8388608</td>
+<td style="text-align:center">8388607</td>
+<td>0</td>
+<td style="text-align:center">16777215</td>
+</tr>
+<tr>
+<td style="text-align:center">INT</td>
+<td>4</td>
+<td style="text-align:center">-2147483648</td>
+<td style="text-align:center">2147483647</td>
+<td>0</td>
+<td style="text-align:center">4294967295</td>
+</tr>
+<tr>
+<td style="text-align:center">BIGINT</td>
+<td>8</td>
+<td style="text-align:center">-9223372036854775808</td>
+<td style="text-align:center">9223372036854775807</td>
+<td>0</td>
+<td style="text-align:center">18446744073709551616</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们实际开发中，整型都喜欢用int(11) 这样表示，从上面的表中可以知道，int类型占了4个字节，其实有些情况下我们并不需要用到这么长的数据类型表示，比如表示、年龄、性别等等能够枚举出来的值，我们可以选择较小的数据类型，这样可以节约空间。</p>
+<p><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可能有人会说了，这才节约一个或者几个字节的空间，能有什么用。但是别忘了，MySql本质上是一个存储系统，如果你的习惯不好，一个字段浪费了几个字节，一张表又有很多个字段，然后一个数据库又有好多张表，假设没一张表存100W条数据，这么算下来的话，浪费的空间可不是用几个字节就能表示的呢。既然MySql给我们提供了这么多的数据类型，那么肯定是各有用途的。不然要给BIGINT基本全都能搞定了。MySql不像Java程序里面一样，使用byte类型的地方也可以使用long类型，因为绝大分的对象在程序中的短命的。执行完了就被释放了。所以可以没有那么节约(但是还是要注意) ，MySql设定的字段类型保存的数据是永久的，如果浪费了那就是永久浪费了。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MySql中的数据类型，默认是带符号的，举例说明一下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 <span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> test_tinyint;</span><br><span class="line">2 <span class="keyword">create</span> <span class="keyword">table</span> test_tinyint (</span><br><span class="line"><span class="number">3</span>     <span class="keyword">num</span> <span class="built_in">tinyint</span></span><br><span class="line"><span class="number">4</span> ) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">charset</span>=utf8;</span><br><span class="line">5 </span><br><span class="line">6 <span class="keyword">insert</span> <span class="keyword">into</span> test_tinyint <span class="keyword">values</span>(<span class="number">-100</span>);</span><br><span class="line">7 <span class="keyword">insert</span> <span class="keyword">into</span> test_tinyint <span class="keyword">values</span>(<span class="number">128</span>);</span><br></pre></td></tr></table></figure>
+<p>执行如上sql语句，第7行会报如下的错误</p>
+<blockquote>
+<p>insert into test_tinyint values(128)</p>
+<p>1264 - Out of range value for column ‘num’ at row 1”</p>
+</blockquote>
+<p>从这里可以看出，MySql中整型默认是带符号的。 如果建表的时候 把上面第3行 改为 “num tinyint unsigned”</p>
+<p>再执行6，7行的插入语句就会出现如下错误：</p>
+<blockquote>
+<p>insert into test_tinyint values(-100)</p>
+<p>1264 - Out of range value for column ‘num’ at row 1</p>
+</blockquote>
+<p>因为无符号的整数是无法表示负数的。</p>
+<p><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在开发中我们经常会写int(11) 那这个11到底有什么用了，首先我们要知道 “整型(N)” 这种写法并不是占了11位，如果数据类型定下来了，后面的N无论多少，所占的字节数都不会变。这个N表示的是显示的宽度，不足的用0补足，超过的无视长度直接显示整个数字，但是这要设置了 <strong>unsigned zerofill</strong> 才有效</p>
+<p><br></p>
+<hr>
+<h1 id="浮点型"><a href="#浮点型" class="headerlink" title="浮点型"></a>浮点型</h1><p>MySql中的浮点型有两种，分别为float,double</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>数据类型</strong></th>
+<th style="text-align:center"><strong>字节数</strong></th>
+<th style="text-align:center"><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">float</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">单精度浮点型</td>
+</tr>
+<tr>
+<td style="text-align:center">double</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">双精度浮点型</td>
+</tr>
+</tbody>
+</table>
+<p>float(M,D),double(M,D)的用法规则如下：</p>
+<ul>
+<li>D表示浮点型数据小数点之后的精度，假如超过D位则四舍五入</li>
+<li>M表示浮点型数据总共的位数</li>
+</ul>
+<p>举例证明，执行如下语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> test_float;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> test_float (</span><br><span class="line">    <span class="keyword">num</span> <span class="built_in">float</span>(<span class="number">5</span>, <span class="number">2</span>)</span><br><span class="line">) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">charset</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">1.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">1.237</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">10.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">100.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">1000.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">10000.233</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_float <span class="keyword">values</span>(<span class="number">100000.233</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> test_float;</span><br></pre></td></tr></table></figure>
+<p>得到的结果为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-------</span></span><br><span class="line">num</span><br><span class="line"><span class="comment">------</span></span><br><span class="line">1.23</span><br><span class="line">1.24</span><br><span class="line">10.23</span><br><span class="line">100.23</span><br><span class="line"><span class="comment">-------</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<hr>
+<h1 id="定点型-decimal"><a href="#定点型-decimal" class="headerlink" title="定点型(decimal)"></a>定点型(decimal)</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从上面的浮点型我们可以看到有丢失精度的问题，那么定点型的数据类型就能解决这个问题了,decimal一般常见于银行，互联网金融系统对小数点后的数字比较敏感的系统中。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;decimal和float/double的区别：</p>
+<ul>
+<li>float，double中存储的是近似值，而decimal则是以字符串的形式保存的</li>
+<li>decimal(M,D)的规则和float/double相同，但区别在float/double在不指定M、D时默认按照实际精度来处理而decimal在不指定M、D时默认为decimal(10, 0)</li>
+</ul>
+<p><br></p>
+<hr>
+<h1 id="日期类型"><a href="#日期类型" class="headerlink" title="日期类型"></a>日期类型</h1><p>Mysql中有5种形式的日期类型：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">数据类型</th>
+<th style="text-align:center">字节数</th>
+<th style="text-align:center">格式</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">date</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">yyyy-MM-dd</td>
+<td style="text-align:center">存储日期值</td>
+</tr>
+<tr>
+<td style="text-align:center">time</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">HH:mm:ss</td>
+<td style="text-align:center">存储时分秒</td>
+</tr>
+<tr>
+<td style="text-align:center">year</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">yyyy</td>
+<td style="text-align:center">存储年</td>
+</tr>
+<tr>
+<td style="text-align:center">datetime</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">yyyy-MM-dd HH:mm:ss</td>
+<td style="text-align:center">存储日期+时间</td>
+</tr>
+<tr>
+<td style="text-align:center">timestamp</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">yyyy-MM-dd HH:mm:ss</td>
+<td style="text-align:center">存储日期+时间，可作时间戳</td>
+</tr>
+</tbody>
+</table>
+<p>这里重点注意一下 datetime和timestamp的区别，这两个类型感觉都差不多，但是占用的字节数却相差较大，这两个数据类型的区别如下：</p>
+<ul>
+<li><p>timestamp所能存储的时间范围为：’1970-01-01 00:00:01.000000’ 到 ‘2038-01-19 03:14:07.999999’。</p>
+</li>
+<li><p>datetime所能存储的时间范围为：’1000-01-01 00:00:00.000000’ 到 ‘9999-12-31 23:59:59.999999’。</p>
+</li>
+<li><p>datetime默认值为空，当插入null时，该值就是null；timestamp默认值不为空，当插入的值为null的时候，mysql会取当前时间</p>
+</li>
+<li><p>datetime存储的时间与时区无关，timestamp存储的时间及显示的时间都依赖于当前时区</p>
+<p>在实际工作种我们一般都会设这么两个字段</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create_time timestamp default current_timestamp <span class="keyword">comment</span> <span class="string">"创建时间"</span>,</span><br><span class="line">update_time <span class="built_in">timestamp</span> <span class="keyword">default</span> <span class="keyword">current_timestamp</span> <span class="keyword">on</span> <span class="keyword">update</span> <span class="keyword">current_timestamp</span> <span class="keyword">comment</span> <span class="string">"修改时间"</span>,</span><br></pre></td></tr></table></figure>
+<p><br></p>
+</li>
+</ul>
+<hr>
+<h1 id="CHAR和VARCHAR类型"><a href="#CHAR和VARCHAR类型" class="headerlink" title="CHAR和VARCHAR类型"></a>CHAR和VARCHAR类型</h1><p>​    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在数据库中，最常用的数据类型就是字符型了，而字符型就是这两个了，关于这两个的差别如下：</p>
+<ul>
+<li>har是固定长度字符串，其长度范围为0~255且与编码方式无关，无论字符实际长度是多少，都会按照指定长度存储，不够的用空格补足；varchar为可变长度字符串，在utf8编码的数据库中其长度范围为0~21844</li>
+<li>char实际占用的字节数即存储的字符所占用的字节数，varchar实际占用的字节数为存储的字符+1或+2或+3</li>
+<li>MySQL处理char类型数据时会将结尾的所有空格处理掉而varchar类型数据则不会</li>
+</ul>
+<p><br></p>
+<h2 id="VARCHAR类型数据占用空间大小探究"><a href="#VARCHAR类型数据占用空间大小探究" class="headerlink" title="VARCHAR类型数据占用空间大小探究"></a>VARCHAR类型数据占用空间大小探究</h2><p>首先执行一段语句测试一下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> test_varchar;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> test_varchar (</span><br><span class="line">    varchar_value <span class="built_in">varchar</span>(<span class="number">100000</span>)</span><br><span class="line">) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">charset</span>=utf8;</span><br></pre></td></tr></table></figure>
+<p>执行出现了如下报错：</p>
+<p><code>Column length too big for column &#39;varchar_value&#39; (max = **21845**); use BLOB or TEXT instead</code></p>
+<p>我把大小改为21845之后，执行依然报错：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Row size too large. The maximum row size for the used table type, not counting BLOBs, is 65535. This includes storage overhead, <span class="keyword">check</span> the manual. You have <span class="keyword">to</span> <span class="keyword">change</span> <span class="keyword">some</span> <span class="keyword">columns</span> <span class="keyword">to</span> <span class="built_in">TEXT</span> <span class="keyword">or</span> BLOBs</span><br></pre></td></tr></table></figure>
+<p>然后改为21844,再次执行就没有报错了，所以在utf编码的格式下varchar(M) M最大值为21844，那么换成gbk编码呢</p>
+<p>还是报同样的错</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Column length too big for column 'varchar_value' (max = 32767); <span class="keyword">use</span> <span class="built_in">BLOB</span> <span class="keyword">or</span> <span class="built_in">TEXT</span> instead</span><br></pre></td></tr></table></figure>
+<p>把大小改为32767还是报和utf8编码一样的错误，把大小改为32765就好了</p>
+<p>那么为社么会出现这种情况呢？原因如下：</p>
+<ul>
+<li>MySQL要求一个行的定义长不能超过65535即64K</li>
+<li>如果varchar字段未指定 not null，那么就会有一个字节专门表示该字段是否为null</li>
+<li>varchar(M)，当M范围为0&lt;=M&lt;=255时会专门有一个字节记录varchar型字符串长度，当M&gt;255时会专门有两个字节记录varchar型字符串的长度，把这一点和上一点结合，那么65535个字节实际可用的为65535-3=65532个字节</li>
+<li>所有英文无论其编码方式，都占用1个字节，但对于gbk编码，一个汉字占两个字节，因此最大M=65532/2=32766；对于utf8编码，一个汉字占3个字节，因此最大M=65532/3=21844</li>
+<li>对于utfmb4编码方式，1个字符最大可能占4个字节，那么varchar(M)，M最大为65532/4=16383</li>
+</ul>
+<p><strong>上面的这种情况是表中只有varchar型的数据，如果同时存在其他类型的数据，那么需要把这些数据减去，才能计算出M的最大值是多少</strong></p>
+<p><br></p>
+<hr>
+<h1 id="VARCHAR、TEXT、BLOB的比较"><a href="#VARCHAR、TEXT、BLOB的比较" class="headerlink" title="VARCHAR、TEXT、BLOB的比较"></a>VARCHAR、TEXT、BLOB的比较</h1><p>因为MySQL单行最大的数据量为64K。所以就需要更大的数据类型来存储。这时候text和blob 就可以上场了。</p>
+<p>当varchar(M)的M大于某些数值时，varchar会自动转为text。情况如下：</p>
+<ul>
+<li>M&gt;255时就会转为tinytext</li>
+<li>M&gt;500时转为text</li>
+<li>M&gt;20000时转为mediumtext</li>
+</ul>
+<p><strong>过大的内容varchar和text没有区别，同时varchar(M)和text的区别在于：</strong></p>
+<ul>
+<li>单行64K即65535字节的空间，varchar只能用63352/65533个字节，但是text可以65535个字节全部用起来</li>
+<li>text可以指定text(M)，但是M无论等于多少都没有影响</li>
+<li>text不允许有默认值，varchar允许有默认值</li>
+</ul>
+<p>varchar和text两种数据类型，使用建议是<strong>能用varchar就用varchar而不用text（存储效率高）</strong>，varchar(M)的M有长度限制，之前说过，如果大于限制，可以使用mediumtext（16M）或者longtext（4G）。</p>
+<p> 至于text和blob，简单过一下就是<strong>text存储的是字符串而blob存储的是二进制字符串</strong>，简单说blob是用于存储例如图片、音视频这种文件的二进制数据的。</p>
+
+    </div>
+    </article>
+</div>
+
+    <div class="_toc">
+        <strong class="toc-title">
+        Contents
+        </strong>
+        <div class="toc-content">
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#整型"><span class="toc-text">整型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#浮点型"><span class="toc-text">浮点型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#定点型-decimal"><span class="toc-text">定点型(decimal)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#日期类型"><span class="toc-text">日期类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CHAR和VARCHAR类型"><span class="toc-text">CHAR和VARCHAR类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#VARCHAR类型数据占用空间大小探究"><span class="toc-text">VARCHAR类型数据占用空间大小探究</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VARCHAR、TEXT、BLOB的比较"><span class="toc-text">VARCHAR、TEXT、BLOB的比较</span></a></li></ol>
+        </div>
+    </div>
+
+</section>
+
+
+    <nav class="post-nav">
+        
+            <div class="page-tags">
+                
+                    <a href="/tags/数据库，MySQL/">数据库，MySQL</a>
+                
+            </div>
+        
+    </nav>
+
+
+
+    <nav class="paginator">
+        
+        
+            <a class="next" href="/2019/05/16/计算机组成原理-入门篇/">
+                
+                <span class="prev-text">计算机组成原理_入门篇</span>
+                <i class="iconfont icon-right"></i>
+            </a>
+        
+    </nav>
+
+
+            </main>
+            <div class="copyright">
+  <div class="text">Powered By
+    <a href="https://hexo.io/">Hexo</a> | Theme <a href="https://github.com/zjx137/hexo-theme-Tsu">Tsu</a> &copy 2019
+  </div>
+</div>
+
+        </div>
+    <div class="back-to-top" id="back-to-top">
+            <i class="iconfont icon-up"></i>
+    </div>
+        
+    </body>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/back-to-top.js"></script>
+    <script src="/js/scroll.js"></script>
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": { 
+        preferredFont: "TeX", 
+        availableFonts: ["STIX","TeX"], 
+        linebreaks: { automatic:true }, 
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) 
+    },
+    tex2jax: { 
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ], 
+        processEscapes: true, 
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {  
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, 
+        Macros: { href: "{}" } 
+    },
+    messageStyle: "none"
+    }); 
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="/styles/main.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+<div class="main">
+<div class="title">
+    <a href="#" class="logo">小灰的技术</a>
+</div>
+<div class="site-nav">
+    <ul id="menu" class="menu">
+    
+        <li class="menu-item text-underline">
+            <a href="/">主页</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/archives">归档</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/about">关于</a>
+        </li>
+            
+    </ul>
+</div>
+</div>
+</header>
+            <main class="main">
+                <section class="posts clearfix">
+<div class="post-wrapper">
+    <article class="post article-entry">
+    <div class="post-title">
+        计算机组成原理_入门篇
+    </div>
+    <p class="sub">5月 16 2019</p>
+    <div class="post-content">
+        <h1 id="1、冯·诺依曼体系结构"><a href="#1、冯·诺依曼体系结构" class="headerlink" title="1、冯·诺依曼体系结构"></a>1、冯·诺依曼体系结构</h1><h2 id="计算机的基本硬件组成"><a href="#计算机的基本硬件组成" class="headerlink" title="计算机的基本硬件组成"></a>计算机的基本硬件组成</h2><blockquote>
+<p>计算机最基本的三大件就是，CPU、内存、主板</p>
+</blockquote>
+<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在计算机的三大件中，CPU是最核心的配件，全名叫做中央处理器(Central Processing Unit)。为什么说CPU是“最重要”的呢，因为计算机所有的计算都是由CPU来计算。所以CPU也成了计算机中造价最贵的部分之一</p>
+<p><img src="/images/cpu.jpg" alt="cpu图片"></p>
+<h3 id="内存-Memory"><a href="#内存-Memory" class="headerlink" title="内存(Memory)"></a>内存(Memory)</h3><p>​        第二个重要的配件就是内存，你在计算机中所有运行的程序，比如打开浏览器，运行游戏，都要加载到内存中才能运行。程序读取的数据，计算得到的结果也要反倒内存里，内存越大，加载的东西就越多。这也是我们平时买电脑时喜欢买大内存的，因为可以同时跑很多的程序。</p>
+<p><img src="/images/内存条.jpg" alt="内存条"></p>
+<h3 id="主板"><a href="#主板" class="headerlink" title="主板"></a>主板</h3><p>​        主板其实就是一个有着各种各样的插槽的配件。存放在内存里的程序和数据需要CPU读取，CPU计算完之后需要把数据写回内存，然后CPU没有直接插在内存上，所以就需要一个沟通桥梁，这个桥梁就是主板。</p>
+<p><br></p>
+<p>我们的CPU和内存条都需要插在主板上，主板的芯片组(Chipset) 和总线(Bus)解决了CPU和内存之间如何通信的问题。芯片组控制了数据传输的流转也就是数据从哪来到哪去的问题。而总线就是数据传输的高速公路，所以总线速度决定了数据传输的有多快</p>
+<p><img src="/images/主板.jpg" alt="主板"></p>
+<hr>
+<p>=================================================================================</p>
+<hr>
+<blockquote>
+<p>​        计算机只要有了这三大件，然后在配上电源，差不多就可以跑起来了。但是这个东西我们人类现在还没法使用它，因为它还缺少输入/输出设备 也就是I/O设备。这样我们才让计算帮助我们干活并且得到反馈。像我们个人电脑必须得有个显示器，因为只有它我们才能看到各种图像，文字。显示器这种设备也就是输出设备。像鼠标，键盘这些配件就是输入设备。最后再给电脑配置一个硬盘，这样各种数据才能持久的保存下来。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>​        现在电脑上基本上都会配备一个风扇用于解决灰尘和散热问题，不过这不是计算机必备的硬件。除此之外，计算机还有个特殊的设备，这个设备就是显卡(Graphice Card)。现在的图形界面操作系统的计算机，显卡都是必不可少的。可能有人也会有疑问，我买的电脑的时没有显卡也可以看见各种图形啊，那是因为现在的主板都带了内置的显卡。如果想要玩大型的游戏，你可能还需要单独的显卡(简称独显)插在主板上，显卡之所以特殊，是因为显卡里面除了cpu之外还有另外一个“处理器” ，也就是GPU(Graphics Processing Unit，图形处理器)。GPU同样可以做各种计算工作</p>
+</blockquote>
+<p>​        鼠标、键盘这些外部I/O设备，它们是通过主板上的<strong>南桥</strong>芯片组来控制和CPU通信的。</p>
+<hr>
+
+    </div>
+    </article>
+</div>
+
+    <div class="_toc">
+        <strong class="toc-title">
+        Contents
+        </strong>
+        <div class="toc-content">
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、冯·诺依曼体系结构"><span class="toc-text">1、冯·诺依曼体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算机的基本硬件组成"><span class="toc-text">计算机的基本硬件组成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU"><span class="toc-text">CPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存-Memory"><span class="toc-text">内存(Memory)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主板"><span class="toc-text">主板</span></a></li></ol></li></ol></li></ol>
+        </div>
+    </div>
+
+</section>
+
+
+    <nav class="post-nav">
+        
+            <div class="page-tags">
+                
+                    <a href="/tags/计算机组成原理/">计算机组成原理</a>
+                
+            </div>
+        
+    </nav>
+
+
+
+    <nav class="paginator">
+        
+            <a class="prev" href="/2019/05/17/MySql数据类型详解/">
+                <i class="iconfont icon-left"></i>
+                <span class="prev-text">MySQL数据类型详解</span>
+            </a>
+        
+        
+            <a class="next" href="/2019/05/16/深入理解volatile/">
+                
+                <span class="prev-text">深入理解volatile</span>
+                <i class="iconfont icon-right"></i>
+            </a>
+        
+    </nav>
+
+
+            </main>
+            <div class="copyright">
+  <div class="text">Powered By
+    <a href="https://hexo.io/">Hexo</a> | Theme <a href="https://github.com/zjx137/hexo-theme-Tsu">Tsu</a> &copy 2019
+  </div>
+</div>
+
+        </div>
+    <div class="back-to-top" id="back-to-top">
+            <i class="iconfont icon-up"></i>
+    </div>
+        
+    </body>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/back-to-top.js"></script>
+    <script src="/js/scroll.js"></script>
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": { 
+        preferredFont: "TeX", 
+        availableFonts: ["STIX","TeX"], 
+        linebreaks: { automatic:true }, 
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) 
+    },
+    tex2jax: { 
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ], 
+        processEscapes: true, 
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {  
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, 
+        Macros: { href: "{}" } 
+    },
+    messageStyle: "none"
+    }); 
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</html>

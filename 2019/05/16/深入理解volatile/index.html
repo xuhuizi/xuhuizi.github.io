@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="/styles/main.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+<div class="main">
+<div class="title">
+    <a href="#" class="logo">小灰的技术</a>
+</div>
+<div class="site-nav">
+    <ul id="menu" class="menu">
+    
+        <li class="menu-item text-underline">
+            <a href="/">主页</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/archives">归档</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/about">关于</a>
+        </li>
+            
+    </ul>
+</div>
+</div>
+</header>
+            <main class="main">
+                <section class="posts clearfix">
+<div class="post-wrapper">
+    <article class="post article-entry">
+    <div class="post-title">
+        深入理解volatile
+    </div>
+    <p class="sub">5月 16 2019</p>
+    <div class="post-content">
+        <blockquote>
+<p> 前沿:volatile是Java虚拟机提供的轻量级同步机制</p>
+</blockquote>
+<p>volatile的3大特性：</p>
+<ul>
+<li><p>保证可见性</p>
+</li>
+<li><p>不保证原子性</p>
+</li>
+<li><p>禁止指令重排序</p>
+</li>
+</ul>
+<h1 id="细说JMM"><a href="#细说JMM" class="headerlink" title="细说JMM"></a>细说JMM</h1><p>JMM ：Java内存模型Java Memory Model，简称JMM，它本身是一种抽象该概念，并不真实存在，它描述的是一组规则或者规范，通过这组规范定义了程序各个变量（包括实例字段）</p>
+<p>JMM关于同步的规定：</p>
+<ol>
+<li>线程解锁前，必须把共享变量的值刷新回主内存</li>
+<li>线程加锁前，必须读取主内存的最新值到自己的工作内存</li>
+<li>加锁解锁是同一把锁</li>
+</ol>
+<hr>
+<p>由于JVM运行程序的实体是线程，而每个线程创建时JVM都会为其创建一个工作内存，工作内存是每个线程的私有数据区域，而Java内存模型中规定所有的变量都存储在主内存中，主内存是共享内存区域，所有线程都可以访问，但线程对变量的操作(读取赋值等)必须在工作内存中进行，首先要将变量从主内存中拷贝到自己的工作内存空间(注意这里不是整个对象的拷贝，如果一个对象有几十M，每个线程都拷贝，那内存早就爆了，这里的拷贝就是是线程中用到对象的字段罢了)，然后对变量进行操作，操作完成之后再将变量刷回主内存，不能直接操作主内存中的变量，各个线程中的工作内存中存储着主内存中的变量拷贝副本，因此不同的线程间无法访问对方的工作内存，线程间的通信必须依靠主内存来完成，简要访问的过程如下图:</p>
+<p><img src="/images/java内存模型.png" alt="图片"></p>
+
+    </div>
+    </article>
+</div>
+
+    <div class="_toc">
+        <strong class="toc-title">
+        Contents
+        </strong>
+        <div class="toc-content">
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#细说JMM"><span class="toc-text">细说JMM</span></a></li></ol>
+        </div>
+    </div>
+
+</section>
+
+
+    <nav class="post-nav">
+        
+            <div class="page-tags">
+                
+                    <a href="/tags/java/">java</a>
+                
+                    <a href="/tags/高并发/">高并发</a>
+                
+            </div>
+        
+    </nav>
+
+
+
+    <nav class="paginator">
+        
+            <a class="prev" href="/2019/05/16/计算机组成原理-入门篇/">
+                <i class="iconfont icon-left"></i>
+                <span class="prev-text">计算机组成原理_入门篇</span>
+            </a>
+        
+        
+            <a class="next" href="/2019/05/10/SpringBoot自动配置探秘/">
+                
+                <span class="prev-text">SpringBoot自动配置探秘</span>
+                <i class="iconfont icon-right"></i>
+            </a>
+        
+    </nav>
+
+
+            </main>
+            <div class="copyright">
+  <div class="text">Powered By
+    <a href="https://hexo.io/">Hexo</a> | Theme <a href="https://github.com/zjx137/hexo-theme-Tsu">Tsu</a> &copy 2019
+  </div>
+</div>
+
+        </div>
+    <div class="back-to-top" id="back-to-top">
+            <i class="iconfont icon-up"></i>
+    </div>
+        
+    </body>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/back-to-top.js"></script>
+    <script src="/js/scroll.js"></script>
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": { 
+        preferredFont: "TeX", 
+        availableFonts: ["STIX","TeX"], 
+        linebreaks: { automatic:true }, 
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) 
+    },
+    tex2jax: { 
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ], 
+        processEscapes: true, 
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {  
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, 
+        Macros: { href: "{}" } 
+    },
+    messageStyle: "none"
+    }); 
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</html>
